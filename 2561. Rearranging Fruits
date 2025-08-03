@@ -1,0 +1,57 @@
+class Solution(object):
+    def minCost(self, basket1, basket2):
+        tot = {}
+        bas1 = {}
+        bas2 ={}
+        to_swap = {}
+        comb = basket1+ basket2
+        a = min(comb)
+        cost = 0
+        for i in range(len(basket1)):
+            if basket1[i] not in tot:
+               tot[basket1[i]] =1 
+            else:
+                tot[basket1[i]] +=1
+        for i in range(len(basket1)):
+            if basket1[i] not in bas1: 
+               bas1[basket1[i]] =1
+            else:
+                bas1[basket1[i]] +=1 
+        for i in range(len(basket2)):
+            if basket2[i] not in tot:
+               tot[basket2[i]] =1 
+            else:
+                tot[basket2[i]] +=1
+        for i in range(len(basket2)):
+            if basket2[i] not in bas2: 
+               bas2[basket2[i]] =1
+            else:
+                bas2[basket2[i]] +=1       
+        for i in bas1:
+            if i not in bas2:
+                bas2[i] = 0
+        for i in bas2:
+            if i not in bas1:
+                bas1[i] = 0
+
+        for i in tot:
+            if tot[i]%2 == 1:
+                return -1
+        
+        for i in tot:
+            diff = abs((bas1[i]-bas2[i])//2)
+            to_swap[i] = diff
+        extra_from_b1 = []
+        extra_from_b2 = []
+
+        for key in to_swap:
+            diff = bas1[key] - bas2[key]
+            if diff > 0:
+                extra_from_b1.extend([key] * (diff // 2)) 
+            elif diff < 0:
+                extra_from_b2.extend([key] * ((-diff) // 2))
+        extra_from_b1.sort()
+        extra_from_b2.sort(reverse=True)
+        for x, y in zip(extra_from_b1, extra_from_b2):
+            cost += min(min(x, y), 2 * a)
+        return cost 
